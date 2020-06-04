@@ -7,8 +7,11 @@ const User = require('../models/user.model');
 const app = express();
 
 app.get('/users', (request, response, next) => {
+    const from = Number(request.query.from) || 5;
 
     User.find({}, 'name email image role')
+        .limit(5)
+        .skip(from)
         .exec((error, usersDB) => {
             if (error) {
                 return response.status(500).json({
@@ -18,9 +21,12 @@ app.get('/users', (request, response, next) => {
                 });
             }
 
-            response.status(200).json({
-                ok: true,
-                data: usersDB
+            User.countDocuments({}, (error, countUsers) => {
+                response.json({
+                    ok: true,
+                    data: usersDB,
+                    count: countUsers
+                });
             });
         });
 });
