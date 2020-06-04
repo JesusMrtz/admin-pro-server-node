@@ -25,6 +25,10 @@ const userSchema = new Schema({
     image: {
         type: String
     },
+    google: {
+        type: Boolean,
+        default: false
+    },
     role: {
         type: String,
         required: true,
